@@ -1,0 +1,12 @@
+{
+  "targets": {
+    "serve": {
+      "command": "npx http-server .",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["build"],
+      "continuous": true
+    }
+  }
+}

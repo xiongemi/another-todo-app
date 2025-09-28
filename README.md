@@ -42,15 +42,9 @@ These targets are either [inferred automatically](https://nx.dev/concepts/inferr
 
 ## App usage
 
-- Visit `/todo` to see today’s todos and add new ones.
+- Visit `/` to see today’s todos and add new ones.
 - Bottom input bar is always visible; click the mic to use voice input (browser Web Speech API).
 - Todos are stored locally in the browser per‑day.
-
-If you haven’t installed MUI yet, install the UI deps (from the repo root):
-
-```
-npm i -w @another-todo-app/another-todo-app @mui/material @mui/icons-material @emotion/react @emotion/styled
-```
 
 ## Add new projects
 

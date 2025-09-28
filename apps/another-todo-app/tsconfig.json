@@ -27,6 +27,7 @@
   "include": [
     "../../apps/another-todo-app/.next/types/**/*.ts",
     "../../dist/apps/another-todo-app/.next/types/**/*.ts",
+    "/todo/types/**/*.ts",
     "next-env.d.ts",
     "src/**/*.js",
     "src/**/*.jsx",
