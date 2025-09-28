@@ -15,6 +15,9 @@ export default function Index() {
               <span> Hello there, </span>
               Welcome @another-todo-app/another-todo-app 👋
             </h1>
+            <p>
+              <a href="/todo">Go to Today’s Todo</a>
+            </p>
           </div>
 
           <div id="hero" className="rounded">
