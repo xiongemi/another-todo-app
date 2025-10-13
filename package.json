@@ -4,6 +4,10 @@
   "license": "MIT",
   "scripts": {},
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiongemi/another-todo-app"
+  },
   "dependencies": {
     "next": "~15.2.4",
     "react": "19.0.0",
