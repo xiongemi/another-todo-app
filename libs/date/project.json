@@ -1,0 +1,8 @@
+{
+  "name": "date",
+  "projectType": "library",
+  "root": "libs/date",
+  "sourceRoot": "libs/date/src",
+  "tags": []
+}
+

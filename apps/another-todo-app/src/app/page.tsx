@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { formatDateKey, useTodayTodos } from '@another-todo-app/date';
 import {
   AppBar,
   Box,
@@ -21,44 +22,9 @@ import {
 import MicIcon from '@mui/icons-material/Mic';
 import SendIcon from '@mui/icons-material/Send';
 
-type TodoItem = {
-  id: string;
-  text: string;
-  done?: boolean;
-};
+// TodoItem type is defined in the date lib
 
-function formatDateKey(d = new Date()) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-function useTodayTodos() {
-  const key = useMemo(() => `todos:${formatDateKey()}`, []);
-  const [items, setItems] = useState<TodoItem[]>([]);
-
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw) setItems(JSON.parse(raw));
-    } catch {}
-  }, [key]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(key, JSON.stringify(items));
-    } catch {}
-  }, [key, items]);
-
-  const add = useCallback((text: string) => {
-    const t = text.trim();
-    if (!t) return;
-    setItems((prev) => [{ id: crypto.randomUUID(), text: t }, ...prev]);
-  }, []);
-
-  return { items, add };
-}
+// useTodayTodos moved to '@another-todo-app/date'
 
 function dayColorPalette(date = new Date()) {
   const weekday = date.getDay(); // 0 Sun, 6 Sat
