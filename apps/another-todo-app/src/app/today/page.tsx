@@ -1,80 +1,23 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { formatDateDisplay, useTodayTodos } from '@another-todo-app/date';
-import {
-  AppBar,
-  Box,
-  Container,
-  IconButton,
-  InputAdornment,
-  List,
-  ListItem,
-  Checkbox,
-  ListItemText,
-  TextField,
-  Toolbar,
-  Typography,
-  ThemeProvider,
-  createTheme,
-  CssBaseline,
-  Paper,
-} from '@mui/material';
+import { useTodayTodos } from '@another-todo-app/date';
+import { Box, Container, IconButton, InputAdornment, List, ListItem, Checkbox, ListItemText, TextField, Paper } from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 import SendIcon from '@mui/icons-material/Send';
 
-function dayColorPalette(date = new Date()) {
-  const weekday = date.getDay(); // 0 Sun, 6 Sat
-  if (weekday === 0) {
-    return {
-      primary: { main: '#ff7a59' },
-      background: { default: '#fff8f5', paper: '#fff' },
-    };
-  }
-  if (weekday === 6) {
-    return {
-      primary: { main: '#3b82f6' },
-      background: { default: '#f5f8ff', paper: '#fff' },
-    };
-  }
-  return {
-    primary: { main: '#64748b' },
-    background: { default: '#f7f8fa', paper: '#fff' },
-  };
-}
-
-function useThemeForToday() {
-  const [theme, setTheme] = useState(() =>
-    createTheme({
-      palette: { mode: 'light', ...dayColorPalette(new Date(2000, 0, 3)) },
-      shape: { borderRadius: 10 },
-    })
-  );
-  useEffect(() => {
-    const pal = dayColorPalette(new Date());
-    setTheme(
-      createTheme({
-        palette: { mode: 'light', ...pal },
-        shape: { borderRadius: 10 },
-      })
-    );
-  }, []);
-  return theme;
-}
+// theme moved to shared date lib
 
 export default function TodayPage() {
-  const theme = useThemeForToday();
   const { items, add, toggle } = useTodayTodos();
   const [value, setValue] = useState('');
-  const [today, setToday] = useState<string>('');
+  // page-local state
   const [recognizing, setRecognizing] = useState(false);
   const recognitionRef = useRef<any>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    setToday(formatDateDisplay());
-  }, []);
+  // no header-managed date here; NavBar shows it
 
   // Voice input toggle via Web Speech API
   const toggleVoice = useCallback(() => {
@@ -124,20 +67,7 @@ export default function TodayPage() {
   }, [add, value]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <AppBar position="sticky" color="primary" enableColorOnDark>
-        <Toolbar>
-          <Typography variant="h6" component="div">
-            Today’s Todos
-          </Typography>
-          <Box sx={{ flex: 1 }} />
-          <Typography variant="body2" suppressHydrationWarning>
-            {today}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
+    <>
       <Container maxWidth="sm" sx={{ pb: 10, pt: 2 }}>
         <Paper variant="outlined" sx={{ p: 1 }}>
           {items.length === 0 ? (
@@ -221,6 +151,6 @@ export default function TodayPage() {
           />
         </Container>
       </Box>
-    </ThemeProvider>
+    </>
   );
 }

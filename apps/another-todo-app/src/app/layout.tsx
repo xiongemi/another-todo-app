@@ -1,4 +1,6 @@
 import './global.css';
+import NavBar from './NavBar';
+import Theme from './theme-client';
 
 export const metadata = {
   title: 'Another TODO App',
@@ -12,7 +14,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Theme>
+          <NavBar />
+          {children}
+        </Theme>
+      </body>
     </html>
   );
 }
