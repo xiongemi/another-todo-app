@@ -8,7 +8,7 @@
     "isolatedModules": true,
     "lib": ["es2022"],
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
@@ -17,9 +17,14 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@another-todo-app/source"],
     "paths": {
       "@another-todo-app/date": ["./libs/date/src/index.ts"]
+    }
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "esnext",
+      "moduleResolution": "node"
     }
   }
 }
