@@ -30,6 +30,11 @@ export function useTodayTodos() {
     setItems((prev) => [{ id: crypto.randomUUID(), text: t }, ...prev]);
   }, []);
 
-  return { items, add };
-}
+  const toggle = useCallback((id: string) => {
+    setItems((prev) =>
+      prev.map((it) => (it.id === id ? { ...it, done: !it.done } : it))
+    );
+  }, []);
 
+  return { items, add, toggle };
+}

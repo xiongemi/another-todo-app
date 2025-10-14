@@ -10,6 +10,7 @@ import {
   InputAdornment,
   List,
   ListItem,
+  Checkbox,
   ListItemText,
   TextField,
   Toolbar,
@@ -64,11 +65,12 @@ function useThemeForToday() {
 
 export default function TodayPage() {
   const theme = useThemeForToday();
-  const { items, add } = useTodayTodos();
+  const { items, add, toggle } = useTodayTodos();
   const [value, setValue] = useState('');
   const [today, setToday] = useState<string>('');
   const [recognizing, setRecognizing] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setToday(formatDateDisplay());
@@ -117,6 +119,8 @@ export default function TodayPage() {
     if (!value.trim()) return;
     add(value);
     setValue('');
+    // keep focus in the input for quick entry
+    try { inputRef.current?.focus(); } catch {}
   }, [add, value]);
 
   return (
@@ -143,8 +147,20 @@ export default function TodayPage() {
           ) : (
             <List>
               {items.map((t) => (
-                <ListItem key={t.id} divider>
-                  <ListItemText primary={t.text} />
+                <ListItem key={t.id} divider disableGutters secondaryAction={null}>
+                  <Checkbox
+                    edge="start"
+                    checked={!!t.done}
+                    onChange={() => toggle(t.id)}
+                    inputProps={{ 'aria-label': 'Mark complete' }}
+                    sx={{ mr: 1 }}
+                  />
+                  <ListItemText
+                    primaryTypographyProps={{
+                      sx: t.done ? { textDecoration: 'line-through', color: 'text.secondary' } : undefined,
+                    }}
+                    primary={t.text}
+                  />
                 </ListItem>
               ))}
             </List>
@@ -173,6 +189,7 @@ export default function TodayPage() {
             onKeyDown={(e) => {
               if (e.key === 'Enter') submit();
             }}
+            inputRef={inputRef}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -191,8 +208,10 @@ export default function TodayPage() {
                   <IconButton
                     aria-label="Add todo"
                     onClick={submit}
+                    type="button"
                     edge="end"
                     color="primary"
+                    disabled={!value.trim()}
                   >
                     <SendIcon />
                   </IconButton>
@@ -205,4 +224,3 @@ export default function TodayPage() {
     </ThemeProvider>
   );
 }
-
