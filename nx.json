@@ -28,7 +28,7 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/date/*"]
+      "exclude": ["libs/date/*", "libs/states/*"]
     },
     {
       "plugin": "@nx/next/plugin",
@@ -61,7 +61,7 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/date/*"],
+      "include": ["libs/date/*", "libs/states/*"],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

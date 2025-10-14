@@ -1,41 +1,29 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { Badge, Box, Button, Container, List, ListItem, ListItemText, Paper, Typography } from '@mui/material';
-import { DateCalendar, LocalizationProvider, PickersDay } from '@mui/x-date-pickers';
+import { useMemo, useState } from 'react';
+import {
+  Badge,
+  Box,
+  Button,
+  Container,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Typography,
+} from '@mui/material';
+import {
+  DateCalendar,
+  LocalizationProvider,
+  PickersDay,
+} from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { formatDateDisplay, formatDateKey } from '@another-todo-app/date';
-
-type Todo = { id: string; text: string; done?: boolean };
-
-function loadAllTodos(): Record<string, Todo[]> {
-  const map: Record<string, Todo[]> = {};
-  try {
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i) ?? '';
-      if (!k.startsWith('todos:')) continue;
-      const dayKey = k.slice('todos:'.length);
-      try {
-        const val = localStorage.getItem(k);
-        if (!val) continue;
-        const arr = JSON.parse(val) as Todo[];
-        if (Array.isArray(arr)) map[dayKey] = arr;
-      } catch { /* ignore */ }
-    }
-  } catch { /* ignore */ }
-  return map;
-}
+import { useAppSelector } from '@another-todo-app/states';
 
 export default function CalendarPage() {
   const [selected, setSelected] = useState<Date>(new Date());
-  const [all, setAll] = useState<Record<string, Todo[]>>({});
-
-  useEffect(() => {
-    setAll(loadAllTodos());
-    const onStorage = () => setAll(loadAllTodos());
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, []);
+  const all = useAppSelector((s) => s.todos.byDay);
 
   const selectedKey = useMemo(() => formatDateKey(selected), [selected]);
   const selectedTodos = all[selectedKey] ?? [];
@@ -59,7 +47,11 @@ export default function CalendarPage() {
         max={99}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <PickersDay {...(other as any)} day={day} outsideCurrentMonth={outsideCurrentMonth} />
+        <PickersDay
+          {...(other as any)}
+          day={day}
+          outsideCurrentMonth={outsideCurrentMonth}
+        />
       </Badge>
     );
   }
@@ -67,15 +59,28 @@ export default function CalendarPage() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Container maxWidth="sm" sx={{ py: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mb: 1 }}>
-          <Button variant="outlined" size="small" onClick={() => setSelected(new Date())}>Today</Button>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            mb: 1,
+          }}
+        >
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={() => setSelected(new Date())}
+          >
+            Today
+          </Button>
         </Box>
 
         <Paper variant="outlined" sx={{ p: 1, mb: 2 }}>
           <DateCalendar
             value={selected}
             onChange={(d) => d && setSelected(d)}
-            views={["day"]}
+            views={['day']}
             slots={{ day: HighlightDay as any }}
           />
         </Paper>
@@ -96,7 +101,12 @@ export default function CalendarPage() {
                   <ListItemText
                     primary={t.text}
                     primaryTypographyProps={{
-                      sx: t.done ? { textDecoration: 'line-through', color: 'text.secondary' } : undefined,
+                      sx: t.done
+                        ? {
+                            textDecoration: 'line-through',
+                            color: 'text.secondary',
+                          }
+                        : undefined,
                     }}
                     secondary={t.done ? 'Completed' : undefined}
                   />

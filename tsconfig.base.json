@@ -18,7 +18,8 @@
     "strict": true,
     "target": "es2022",
     "paths": {
-      "@another-todo-app/date": ["./libs/date/src/index.ts"]
+      "@another-todo-app/date": ["./libs/date/src/index.ts"],
+      "@another-todo-app/states": ["./libs/states/src/index.ts"]
     }
   },
   "ts-node": {

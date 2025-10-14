@@ -1,8 +1,25 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTodayTodos } from '@another-todo-app/date';
-import { Box, Container, IconButton, InputAdornment, List, ListItem, Checkbox, ListItemText, TextField, Paper } from '@mui/material';
+import { useMemo, useCallback, useRef, useState } from 'react';
+import {
+  useAppDispatch,
+  useAppSelector,
+  addTodo,
+  toggleTodo,
+} from '@another-todo-app/states';
+import { formatDateKey } from '@another-todo-app/date';
+import {
+  Box,
+  Container,
+  IconButton,
+  InputAdornment,
+  List,
+  ListItem,
+  Checkbox,
+  ListItemText,
+  TextField,
+  Paper,
+} from '@mui/material';
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 import SendIcon from '@mui/icons-material/Send';
@@ -10,7 +27,9 @@ import SendIcon from '@mui/icons-material/Send';
 // theme moved to shared date lib
 
 export default function TodayPage() {
-  const { items, add, toggle } = useTodayTodos();
+  const dispatch = useAppDispatch();
+  const dayKey = useMemo(() => formatDateKey(), []);
+  const items = useAppSelector((s) => s.todos.byDay[dayKey] ?? []);
   const [value, setValue] = useState('');
   // page-local state
   const [recognizing, setRecognizing] = useState(false);
@@ -60,11 +79,13 @@ export default function TodayPage() {
 
   const submit = useCallback(() => {
     if (!value.trim()) return;
-    add(value);
+    dispatch(addTodo({ dayKey, text: value }));
     setValue('');
     // keep focus in the input for quick entry
-    try { inputRef.current?.focus(); } catch {}
-  }, [add, value]);
+    try {
+      inputRef.current?.focus();
+    } catch {}
+  }, [dispatch, dayKey, value]);
 
   return (
     <>
@@ -77,17 +98,27 @@ export default function TodayPage() {
           ) : (
             <List>
               {items.map((t) => (
-                <ListItem key={t.id} divider disableGutters secondaryAction={null}>
+                <ListItem
+                  key={t.id}
+                  divider
+                  disableGutters
+                  secondaryAction={null}
+                >
                   <Checkbox
                     edge="start"
                     checked={!!t.done}
-                    onChange={() => toggle(t.id)}
+                    onChange={() => dispatch(toggleTodo({ dayKey, id: t.id }))}
                     inputProps={{ 'aria-label': 'Mark complete' }}
                     sx={{ mr: 1 }}
                   />
                   <ListItemText
                     primaryTypographyProps={{
-                      sx: t.done ? { textDecoration: 'line-through', color: 'text.secondary' } : undefined,
+                      sx: t.done
+                        ? {
+                            textDecoration: 'line-through',
+                            color: 'text.secondary',
+                          }
+                        : undefined,
                     }}
                     primary={t.text}
                   />
