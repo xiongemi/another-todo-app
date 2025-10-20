@@ -20,6 +20,7 @@ import {
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { formatDateDisplay, formatDateKey } from '@another-todo-app/date';
 import { useAppSelector } from '@another-todo-app/states';
+import Link from 'next/link';
 
 export default function CalendarPage() {
   const [selected, setSelected] = useState<Date>(new Date());
@@ -48,7 +49,7 @@ export default function CalendarPage() {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <PickersDay
-          {...(other as any)}
+          {...other}
           day={day}
           outsideCurrentMonth={outsideCurrentMonth}
         />
@@ -67,6 +68,15 @@ export default function CalendarPage() {
             mb: 1,
           }}
         >
+          <Button
+            variant="contained"
+            size="small"
+            component={Link}
+            href="/today"
+            sx={{ mr: 1 }}
+          >
+            Edit
+          </Button>
           <Button
             variant="outlined"
             size="small"
