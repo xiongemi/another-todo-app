@@ -10,12 +10,14 @@ const compat = new FlatCompat({
   recommendedConfig: js.configs.recommended,
 });
 
-export default [
+const config = [
   ...fixupConfigRules(compat.extends('next')),
   ...fixupConfigRules(compat.extends('next/core-web-vitals')),
   ...baseConfig,
   ...nx.configs['flat/react-typescript'],
   {
-    ignores: ['.next/**/*', '**/out-tsc'],
+    ignores: ['.next/**/*', '**/out-tsc', 'another-todo-app/**/*'],
   },
 ];
+
+export default config;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { createAppStore } from './store';
 import { addTodo } from './todosSlice';
 

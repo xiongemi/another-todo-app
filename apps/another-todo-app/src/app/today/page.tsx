@@ -84,7 +84,9 @@ export default function TodayPage() {
     // keep focus in the input for quick entry
     try {
       inputRef.current?.focus();
-    } catch {}
+    } catch {
+      // ignore errors
+    }
   }, [dispatch, dayKey, value]);
 
   return (
