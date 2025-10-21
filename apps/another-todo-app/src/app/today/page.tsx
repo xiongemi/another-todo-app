@@ -23,6 +23,7 @@ import {
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 import SendIcon from '@mui/icons-material/Send';
+import { processTodayInput } from './assistant';
 
 // theme moved to shared date lib
 
@@ -77,15 +78,21 @@ export default function TodayPage() {
     }
   }, [recognizing]);
 
-  const submit = useCallback(() => {
-    if (!value.trim()) return;
-    dispatch(addTodo({ dayKey, text: value }));
-    setValue('');
-    // keep focus in the input for quick entry
+  const submit = useCallback(async () => {
+    const raw = value.trim();
+    if (!raw) return;
     try {
-      inputRef.current?.focus();
-    } catch {
-      // ignore errors
+      const actions = await processTodayInput(raw);
+      for (const a of actions) {
+        if (a.type === 'add' && a.text.trim()) {
+          dispatch(addTodo({ dayKey, text: a.text }));
+        }
+      }
+    } finally {
+      setValue('');
+      try {
+        inputRef.current?.focus();
+      } catch {}
     }
   }, [dispatch, dayKey, value]);
 
@@ -146,40 +153,45 @@ export default function TodayPage() {
         <Container maxWidth="sm">
           <TextField
             fullWidth
+            multiline
+            minRows={2}
+            maxRows={6}
             placeholder="Add a todo for today…"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter') submit();
             }}
-            inputRef={inputRef}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconButton
-                    aria-label={recognizing ? 'Stop recording' : 'Voice input'}
-                    onClick={toggleVoice}
-                    edge="start"
-                    color={recognizing ? 'error' : 'default'}
-                  >
-                    {recognizing ? <StopIcon /> : <MicIcon />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="Add todo"
-                    onClick={submit}
-                    type="button"
-                    edge="end"
-                    color="primary"
-                    disabled={!value.trim()}
-                  >
-                    <SendIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
+            slotProps={{
+              input: {
+                ref: inputRef,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton
+                      aria-label={recognizing ? 'Stop recording' : 'Voice input'}
+                      onClick={toggleVoice}
+                      edge="start"
+                      color={recognizing ? 'error' : 'default'}
+                    >
+                      {recognizing ? <StopIcon /> : <MicIcon />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="Add todo"
+                      onClick={submit}
+                      type="button"
+                      edge="end"
+                      color="primary"
+                      disabled={!value.trim()}
+                    >
+                      <SendIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              },
             }}
           />
         </Container>

@@ -1,0 +1,26 @@
+{
+  "name": "@another-todo-app/mcp-server-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "@another-todo-app/mcp-server"
+    ],
+    "targets": {
+      "e2e": {
+        "executor": "@nx/jest:jest",
+        "outputs": [
+          "{projectRoot}/test-output/jest/coverage"
+        ],
+        "options": {
+          "jestConfig": "apps/mcp-server-e2e/jest.config.ts",
+          "passWithNoTests": true
+        },
+        "dependsOn": [
+          "@another-todo-app/mcp-server:build",
+          "@another-todo-app/mcp-server:serve"
+        ]
+      }
+    }
+  }
+}
