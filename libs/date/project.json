@@ -1,5 +1,5 @@
 {
-  "name": "date",
+  "name": "@another-todo-app/date",
   "projectType": "library",
   "root": "libs/date",
   "sourceRoot": "libs/date/src",
