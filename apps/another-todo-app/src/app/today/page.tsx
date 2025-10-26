@@ -23,7 +23,6 @@ import {
 import MicIcon from '@mui/icons-material/Mic';
 import StopIcon from '@mui/icons-material/Stop';
 import SendIcon from '@mui/icons-material/Send';
-import { processTodayInput } from './assistant';
 
 // theme moved to shared date lib
 
@@ -82,12 +81,8 @@ export default function TodayPage() {
     const raw = value.trim();
     if (!raw) return;
     try {
-      const actions = await processTodayInput(raw);
-      for (const a of actions) {
-        if (a.type === 'add' && a.text.trim()) {
-          dispatch(addTodo({ dayKey, text: a.text }));
-        }
-      }
+      // Directly add the entered text as a todo (assistant removed)
+      dispatch(addTodo({ dayKey, text: raw }));
     } finally {
       setValue('');
       try {
@@ -168,7 +163,9 @@ export default function TodayPage() {
                 startAdornment: (
                   <InputAdornment position="start">
                     <IconButton
-                      aria-label={recognizing ? 'Stop recording' : 'Voice input'}
+                      aria-label={
+                        recognizing ? 'Stop recording' : 'Voice input'
+                      }
                       onClick={toggleVoice}
                       edge="start"
                       color={recognizing ? 'error' : 'default'}
