@@ -39,15 +39,16 @@
       "options": {
         "platform": "node",
         "outputPath": "apps/mcp-server/dist-mcp",
-        "format": ["cjs"],
-        "bundle": false,
+        "format": ["esm"],
+        "bundle": true,
         "main": "apps/mcp-server/src/mcp.ts",
         "tsConfig": "apps/mcp-server/tsconfig.app.json",
         "assets": ["apps/mcp-server/src/assets"],
         "esbuildOptions": {
           "sourcemap": true,
+          "external": [],
           "outExtension": {
-            ".js": ".js"
+            ".js": ".mjs"
           }
         }
       },
@@ -57,10 +58,17 @@
           "esbuildOptions": {
             "sourcemap": false,
             "outExtension": {
-              ".js": ".js"
+              ".js": ".mjs"
             }
           }
         }
+      }
+    },
+    "serve-mcp-node": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["build-mcp"],
+      "options": {
+        "command": "node apps/mcp-server/dist-mcp/mcp.mjs"
       }
     },
     "prune-lockfile": {
