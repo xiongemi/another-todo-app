@@ -41,6 +41,7 @@
         "outputPath": "apps/mcp-server/dist-mcp",
         "format": ["esm"],
         "bundle": true,
+        "external": [],
         "main": "apps/mcp-server/src/mcp.ts",
         "tsConfig": "apps/mcp-server/tsconfig.app.json",
         "assets": ["apps/mcp-server/src/assets"],

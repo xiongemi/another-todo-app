@@ -3,7 +3,6 @@
  Exposes tools: listTodos, addTodo, toggleTodo.
  Persists to JSON at src/assets/todos.json (workspace-relative).
 */
-// ESM-friendly subpath imports
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
