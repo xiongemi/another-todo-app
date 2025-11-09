@@ -7,7 +7,7 @@
     "importHelpers": true,
     "isolatedModules": true,
     "lib": ["es2022"],
-    "module": "esnext",
+    "module": "nodenext",
     "moduleResolution": "nodenext",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
@@ -19,7 +19,6 @@
     "target": "es2022",
     "paths": {
       "@another-todo-app/date": ["./libs/date/src/index.ts"],
-      "@another-todo-app/mcp-server": ["./libs/mcp-server/src/main.ts"],
       "@another-todo-app/states": ["./libs/states/src/index.ts"]
     }
   },
