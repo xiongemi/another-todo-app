@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "another-todo-app": {
+      "command": "node",
+      "args": ["apps/mcp-server/dist-mcp/mcp.mjs"],
+      "cwd": ".",
+      "env": {}
+    }
+  }
+}
