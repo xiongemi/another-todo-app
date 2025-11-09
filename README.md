@@ -40,6 +40,65 @@ These targets are either [inferred automatically](https://nx.dev/concepts/inferr
 
 [More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
+## MCP Server
+
+A minimal Model Context Protocol (MCP) server is included to let AI tools integrate with the todo data.
+
+- Location: `apps/mcp-server`
+- Tools exposed: `listTodos`, `addTodo`, `toggleTodo`
+- Storage: JSON file at `apps/mcp-server/src/assets/todos.json`
+
+### Run (HTTP server)
+
+Runs a simple Express HTTP server (useful for quick sanity checks):
+
+```sh
+npx nx serve @another-todo-app/mcp-server
+# -> http://localhost:3000/  (responds with { message: 'Hello API' })
+```
+
+### Build bundles
+
+- Node/HTTP bundle to `apps/mcp-server/dist`:
+
+```sh
+npx nx build @another-todo-app/mcp-server
+```
+
+- MCP stdio bundle (ESM) to `apps/mcp-server/dist-mcp/mcp.mjs`:
+
+```sh
+npx nx run @another-todo-app/mcp-server:build-mcp
+```
+
+### Run as MCP (stdio)
+
+Run the MCP server over stdio (for MCP-compatible clients):
+
+```sh
+# Development with watch rebuilds
+npx nx run @another-todo-app/mcp-server:serve-mcp
+
+# Or after building
+npx nx run @another-todo-app/mcp-server:build-mcp && node apps/mcp-server/dist-mcp/mcp.mjs
+```
+
+### Quick local test (client script)
+
+There’s a tiny client script that launches the built stdio server, calls tools, and prints results:
+
+```sh
+npx nx run @another-todo-app/mcp-server:build-mcp
+node scripts/mcp-client-stdio.mjs
+```
+
+Expected behavior:
+- `addTodo` creates a todo with an `id`, `text`, optional `dayKey`, and `done=false`.
+- `listTodos` returns all or by `dayKey`.
+- `toggleTodo` flips `done` for a given `id`.
+
+Tip: If you change tools or schemas in `apps/mcp-server/src/mcp.ts`, rebuild with `build-mcp` before re-running the client script.
+
 ## App usage
 
 - Visit `/` to see today’s todos and add new ones.
