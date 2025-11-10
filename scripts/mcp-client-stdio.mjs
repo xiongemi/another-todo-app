@@ -14,10 +14,14 @@ async function main() {
   });
 
   const client = new Client({ name: 'another-todo-app-cli', version: '0.1.0' });
-  await client.connect(transport);
+  await client.connect(transport, { timeoutMs: 15000 });
+
+  // Verify server is responsive and list available tools
+  const tools = await client.listTools(undefined, { timeoutMs: 15000 });
+  console.log('tools/list result:\n', JSON.stringify(tools, null, 2));
 
   // Add a todo (text and dayKey can be passed via CLI)
-  const add = await client.callTool('addTodo', { text, dayKey });
+  const add = await client.callTool('addTodo', { text, dayKey }, { timeoutMs: 15000 });
   console.log('addTodo result:\n', JSON.stringify(add, null, 2));
 
   // List todos for today

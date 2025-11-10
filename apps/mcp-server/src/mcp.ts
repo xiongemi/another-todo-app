@@ -13,7 +13,8 @@ type Todo = { id: string; text: string; done?: boolean; dayKey?: string };
 import fs from 'node:fs';
 import path from 'node:path';
 
-const dataPath = path.join(process.cwd(), 'apps/mcp-server/src/assets/todos.json');
+// Persist outside of src to avoid bundler/sandbox quirks
+const dataPath = path.join(process.cwd(), 'apps/mcp-server/.data/todos.json');
 
 function loadTodos(): Todo[] {
   try {
@@ -49,7 +50,9 @@ server.registerTool(
     inputSchema: { dayKey: z.string().optional() },
   },
   async ({ dayKey }) => {
+    console.error('[mcp] listTodos called with dayKey=', dayKey);
     const items = dayKey ? todos.filter((t) => t.dayKey === dayKey) : todos;
+    console.error('[mcp] listTodos returning', items.length, 'items');
     return {
       content: [{ type: 'text', text: JSON.stringify(items) }],
       structuredContent: { items },
@@ -65,10 +68,12 @@ server.registerTool(
     inputSchema: { text: z.string(), dayKey: z.string().optional() },
   },
   async ({ text, dayKey }) => {
+    console.error('[mcp] addTodo called with text=', text, 'dayKey=', dayKey);
     const id = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
     const item: Todo = { id, text: String(text).trim(), done: false, dayKey };
     todos.push(item);
     saveTodos(todos);
+    console.error('[mcp] addTodo created id=', id);
     return { content: [{ type: 'text', text: JSON.stringify(item) }], structuredContent: item };
   }
 );
@@ -81,13 +86,16 @@ server.registerTool(
     inputSchema: { id: z.string() },
   },
   async ({ id }) => {
+    console.error('[mcp] toggleTodo called with id=', id);
     const idx = todos.findIndex((t) => t.id === id);
     if (idx >= 0) {
       todos[idx] = { ...todos[idx], done: !todos[idx].done };
       saveTodos(todos);
+      console.error('[mcp] toggleTodo toggled id=', id);
       return { content: [{ type: 'text', text: JSON.stringify(todos[idx]) }], structuredContent: todos[idx] };
     }
     const err = { error: 'not_found' };
+    console.error('[mcp] toggleTodo not found id=', id);
     return { content: [{ type: 'text', text: JSON.stringify(err) }], structuredContent: err, isError: true };
   }
 );
