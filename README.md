@@ -46,7 +46,28 @@ A minimal Model Context Protocol (MCP) server is included to let AI tools integr
 
 - Location: `apps/mcp-server`
 - Tools exposed: `listTodos`, `addTodo`, `toggleTodo`
-- Storage: JSON file at `apps/mcp-server/src/assets/todos.json`
+- Storage: JSON file at `apps/mcp-server/.data/todos.json`
+
+### Codex/Cursor integration (mcp.json)
+
+Codex-compatible clients can auto-load the local MCP server via stdio using `mcp.json` at the repo root:
+
+```json
+{
+  "mcpServers": {
+    "another-todo-app": {
+      "command": "node",
+      "args": ["apps/mcp-server/dist-mcp/mcp.mjs"],
+      "cwd": ".",
+      "env": {}
+    }
+  }
+}
+```
+
+Workflow:
+- Build the stdio bundle with Nx.
+- Your client (Codex, Cursor, or the local script) launches the server over stdio and calls tools.
 
 ### Run (HTTP server)
 
@@ -90,6 +111,16 @@ There’s a tiny client script that launches the built stdio server, calls tools
 ```sh
 npx nx run @another-todo-app/mcp-server:build-mcp
 node scripts/mcp-client-stdio.mjs
+```
+
+The client script also supports adding a todo with arguments:
+
+```sh
+# Add for today (YYYY-MM-DD defaulted to today)
+node scripts/mcp-client-stdio.mjs "package stuffs"
+
+# Or specify a date
+node scripts/mcp-client-stdio.mjs "package stuffs" 2025-11-09
 ```
 
 Expected behavior:
